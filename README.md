@@ -1,156 +1,688 @@
-MA practical 3:
-Working with Docker
-1) create Docker Hub account (sign up)
-2) login to https://labs.play-with-docker.com/
-Click on start
-3)add new instance
-4)perform following:
-Method1:
-To pull and push images using docker
-Command: to check docker version
-docker –version
-output:
-Command: to pull readymade image
-docker pull rocker/verse
-output:
-Command: to check images in docker
-docker images
-output:
-Now Login to docker hub and create repository
-Output:
-Click on Create button
-Now check repository created
-Command: to login to your docker account
-docker login –username=kbdocker11
-password:
-note: kbdocker11 is my docker ID . You will use your docker ID here. And enter your
-password .
-Output:
-Command : to tag image
-docker tag 8c3e4e2c3e kbdocker11/repo1:firsttry
-note: here 8c3e4e2c3e this is image id which you can get from docker images
-command.
-Output:
-Command: to push image to docker hub account
-docker push kbdocker11/repo1:firsttry
-note: firsttry is tag name created above.
-Output
-Check it in docker hub now
-Click on tags and check
-Method 2:
-Build an image then push it to docker and run it
-Command : to create docker file
-1. cat > Dockerfile <<EOF
-2. FROM busybox
-3. CMD echo "Hello world! This is my first Docker image."
-4. EOF
-Output:
-Command : to build image from docker file
- dokcer build –t kbdocker11/repo2 .
-Output:
-Command: to check docker images
- docker images
-output:
-Command: to push image to docker hub
- docker push kbdocker11/repo2 .
-Output:
-Now check it on docker hub
-command: to run docker image:
- docker run kbdocker11/repo2
-output:
-Now close session. 
+// # Calculate number of samples required for an image
+clc ;
+close ;
+m = 6;
+n = 4;
+N = 100;
+N2= N*N ; // Number of dots per inch in both direction
+Fs= m* n * N2 ;
+disp ( Fs , 'Number of samples requried to preserve the information in the image')
 
-                          
- 8) Running Location Service in Docker
-(create docker hub login first to use it in play with docker)
-Now login in to Play-With-Docker
-Click on Start
-Click on Add New Instance
-Start typing following commands
-Command : To run teamservice
-docker run -d -p 5000:5000 -e PORT=5000 \
--e LOCATION__URL=http://localhost:5001 \
-dotnetcoreservices/teamservice:location
-output: (you can observe that it has started port 5000 on top)
-Command: to run location service
-docker run -d -p 5001:5001 -e PORT=5001 \
-dotnetcoreservices/locationservice:nodb
-output: (now it has started one more port that is 5001 for location service)
-Command : to check running images in docker
-docker images
-output:
-Command: to create new team
-curl -H "Content-Type:application/json" -X POST -d \
-'{"id":"e52baa63-d511-417e-9e54-7aab04286281", "name":"KC"}' http://localhost:5000/teams
-Output:
-Command :To confirm that team is added
-curl http://localhost:5000/teams/e52baa63-d511-417e-9e54-7aab04286281
-Output
-Command : to add new member to team
-curl -H "Content-Type:application/json" -X POST -d \
-'{"id":"63e7acf8-8fae-42ce-9349-3c8593ac8292", "firstName":"Kirti", "lastName":"Bhatt"}'
-http://localhost:5000/teams/e52baa63-d511-417e-9e54-7aab04286281/members
-Output:
-Command :To confirm member added
-curl http://localhost:5000/teams/e52baa63-d511-417e-9e54-7aab04286281
-output:
-Command : To add location for member
-curl -H "Content-Type:application/json" -X POST -d \
-'{"id":"64c3e69f-1580-4b2f-a9ff-2c5f3b8f0e1f", "latitude":12.0,"longitude":12.0,"altitude":10.0,
-"timestamp":0,"memberId":"63e7acf8-8fae-42ce-9349-3c8593ac8292"}' http://localhost:5001/locations/63e7acf8-
-8fae-42ce-9349-3c8593ac8292
-Output:
-Command : To confirm location is added in member
-curl http://localhost:5001/locations/63e7acf8-8fae-42ce-9349-3c8593ac8292
-output: 
-                          
-6)Practical 6 (Working with Circle CI for continuous integration)
-Step 1 - Create a repository
-1. Log in to GitHub and begin the process to create a new repository.
-2. Enter a name for your repository (for example, hello-world).
-3. Select the option to initialize the repository with a README file.
-4. Finally, click Create repository.
-5. There is no need to add any source code for now.
-Login to Circle CI https://app.circleci.com/ Using GitHub Login, Once logged in navigate to Projects.
-Step 2 - Set up CircleCI
-1. Navigate to the CircleCI Projects page. If you created your new repository under an organization, you will need to
-select the organization name.
-2. You will be taken to the Projects dashboard. On the dashboard, select the project you want to set up (hello-world).
-3. Select the option to commit a starter CI pipeline to a new branch, and click Set Up Project. This will create a file
-.circleci/config.yml at the root of your repository on a new branch called circleci-project-setup.
-Step 3 - Your first pipeline
-On your project’s pipeline page, click the green Success button, which brings you to the workflow that ran (say-helloworkflow).
-Within this workflow, the pipeline ran one job, called say-hello. Click say-hello to see the steps in this job:
-a. Spin up environment
-b. Preparing environment variables
-c. Checkout code
-d. Say hello
-Now select the “say-hello-workflow” to the right of Success status column
-Select “say-hello” Job with a green tick
-Select Branch and option circleci-project-setup
-Step 4 - Break your build
-In this section, you will edit the .circleci/config.yml file and see what happens if a build does not complete successfully.
-It is possible to edit files directly on GitHub.
+// # spatialresolution
+clc;
+clear all;
+Img1=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lena.jpeg');
+Img = rgb2gray(Img1);
+//512*512
+subplot (2,2,1),imshow(Img),title('Og image 512*512');
+//256*256
+Samp=zeros(256);
+m=1;
+n=1;
+for i=1:2:512
+    for j=1:2:512
+         Samp(m,n)=Img(i,j);
+           n=n+1;       
+        end 
+        n=1;
+        m=m+1;  
+end
+SampImg256=mat2gray(Samp);
+subplot(2,2,2);
+imshow(SampImg256);
+title('Sampled.Img256*256')
 
-The GitHub file editor should look like this
-Scroll down and Commit your changes on GitHub
-After committing your changes, then return to the Projects page in CircleCI. You should see a new pipeline running… and it
-will fail! What’s going on? The Node orb runs some common Node tasks. Because you are working with an empty
-repository, running npm run test, a Node script, causes the configuration to fail. To fix this, you need to set up a Node
-project in your repository.
-Step 5 – Use Workflows
-You do not have to use orbs to use CircleCI. The following example details how to create a custom configuration that also
-uses the workflow feature of CircleCI.
-1) Take a moment and read the comments in the code block below. Then, to see workflows in action, edit
-your .circleci/config.yml file and copy and paste the following text into it.
-You don’t need to write the comments which are the text after #
-2) Commit these changes to your repository and navigate back to the CircleCI Pipelines page. You should see your pipeline
-running.
-3) Click on the running pipeline to view the workflow you have created. You should see that two jobs ran (or are currently
-running!) concurrently.
-Step 5 – Add some changes to use workspaces
-Each workflow has an associated workspace which can be used to transfer files to downstream jobs as the workflow
-progresses. You can use workspaces to pass along data that is unique to this run and which is needed for downstream
-jobs. Try updating config.yml to the following:
-Updated config.yml in GitHub file editor should be updated like this
-Finally your workflow with the jobs running should look like this
+// # mean filter
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+b1=double(a);
+c=imnoise(a,'gaussian');
+d=double(c);
+b=d;
+m=(1/9)*(ones(3,3));
+[r1,c1]=size(a);
+
+subplot(2,2,1);
+imshow(a);
+title('org img');
+
+subplot(2,2,2);
+imshow(c);
+title('noised img');
+
+for i=2:r1-1
+for j=2:c1-1
+a1=d(i-1,j-1)+d(i-1,j)+d(i-1,j+1)+d(i,j-1)+d(i,j)+d(i,j+1)
++d(i+1,j-1)+d(i+1,j)+d(i+1,j+1);
+b(i,j)=a1*(1/9);
+end
+end
+subplot(2,2,3);
+imshow(uint8(b)); 
+title('Filtered Image');
+
+
+///////
+Samp=zeros(128);
+m=1;
+n=1;
+for i=1:4:512
+    for j=1:4:512
+         Samp(m,n)=Img(i,j);
+           n=n+1;       
+        end 
+        n=1;
+        m=m+1;  
+end
+SampImg128=mat2gray(Samp);
+subplot(2,2,3),imshow(SampImg128),title('Sampled.Img128*128')
+
+//////////////////////
+
+Samp=zeros(64);
+m=1;
+n=1;
+for i=1:8:512
+    for j=1:8:512
+         Samp(m,n)=Img(i,j);
+           n=n+1;       
+        end 
+        n=1;
+        m=m+1;  
+end
+SampImg64=mat2gray(Samp);
+subplot(2,2,4),imshow(SampImg64),title('Sampled.Img64*64')
+
+// # median filter
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+b1 = double(mtlb_double(a));
+c = imnoise(a,"salt & pepper",0.2);
+d = double(mtlb_double(c));
+b = d;
+m = (1/9)*ones(3,3);
+
+
+subplot(2,2,1);
+imshow(a);
+title('org img');
+
+subplot(2,2,2);
+imshow(c);
+title('noised img');
+
+
+[r1,c1] = size(mtlb_double(a));
+for i = 2:r1-1
+        for j = 2:c1-1
+        a1 = [d(i-1,j-1),d(i-1,j),d(i-1,j+1),d(i,j-1),d(i,j), d(i,j+1),d(i+1,j-1),d(i+1,j),d(i+1,j+1)];
+        a2 = gsort(a1,"g","i");//gsort(A,'g','i') sort the elements of the array A in the increasing order.
+        med = a2(5);
+        b(i,j) = med;
+        end;
+end;
+subplot(2,2,3);
+imshow(uint8(b)); 
+title('Filtered Image');
+
+// # 4-2-Wiener Filter
+clc;
+clear all;
+close;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+x=double(a);
+sigma = 50;
+gamma = 1;
+alpha = 1;
+[M N]=size(x);
+h = ones(5,5)/25;
+Freqa = fft2(x);
+Freqh = fft2(h,M,N);
+y = real(ifft(Freqh.*Freqa))+25*randn(M,N);
+
+// # basicfunction
+clc;
+clear all;
+
+i1=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+i2=imread('C:\Users\Mithilesh\Desktop\all class\DIP\dip\New Folder\lena.jpeg');
+//Img = rgb2gray(Img);
+//Samp=zeros(256);
+figure(1);
+imshow(i1);
+figure(2);
+imshow(i2);
+figure(3);
+subplot(1,2,1);
+imshow(i1);
+subplot(1,2,2);
+imshow(i2);
+
+// # Bit Place slicing
+clc;
+clear all;
+f=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lenag.jpeg');
+f=double(f);
+[r,c]=size(f);
+com=[128 64 32 16 8 4 2 1];
+
+for k=1:1:length(com);
+    for i=1:r
+        for j=1:c
+        new(i,j)=bitand(f(i,j),com(k));
+    end
+    subplot(2,4,k);
+    imshow(new);
+    end
+end
+
+// # boundary detection
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\rectb.png');
+a=rgb2gray(a);
+subplot(2,1,1);
+imshow(a);
+title('org img');
+d=a;
+[r,c]=size(d);
+m=[1 1 1;1 1 1;1 1 1];
+for i=2:1:r-1
+for j=2:1:c-1
+new=[(m(1)*d(i-1,j-1)) (m(2)*d(i-1,j)) (m(3)*d(i-1,j+1))
+(m(4)*d(i,j-1)) (m(5)*d(i,j)) (m(6)*d(i,j+1))
+(m(7)*d(i+1,j-1)) (m(8)*d(i+1,j)) (m(9)*d(i+1,j+1))];
+A2(i,j)=min(new);
+aa(i,j)=d(i,j)-A2(i,j);
+end
+end
+subplot(2,1,2);
+imshow(aa);title('Boundary Extracted Image');
+
+// # closing
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\rice.jpeg');
+a=rgb2gray(a);
+d=a;
+A2=d;
+A1=d;
+subplot(2,2,1);
+imshow(a);
+title('org img');
+[r,c]=size(d);
+m=[1 1 1;1 1 1;1 1 1];
+for i=2:1:r-1
+for j=2:1:c-1
+new=[(m(1)*d(i-1,j-1)) (m(2)*d(i-1,j)) (m(3)*d(i-1,j+1))
+(m(4)*d(i,j-1)) (m(5)*d(i,j)) (m(6)*d(i,j+1))
+(m(7)*d(i+1,j-1)) (m(8)*d(i+1,j)) (m(9)*d(i+1,j+1))];
+A2(i,j)=max(new);
+end
+subplot(2,2,2);
+imshow(A2);
+title('org img');
+end
+
+d = A2;
+A1=A2;
+[r,c]=size(d);
+for i=2:1:r-1
+for j=2:1:c-1
+new=[(m(1)*d(i-1,j-1)) (m(2)*d(i-1,j)) (m(3)*d(i-1,j+1))
+(m(4)*d(i,j-1)) (m(5)*d(i,j)) (m(6)*d(i,j+1))
+(m(7)*d(i+1,j-1)) (m(8)*d(i+1,j)) (m(9)*d(i+1,j+1))];
+A1(i,j)=min(new);
+end
+subplot(2,2,3);
+imshow(A1);title('Processed Image - Closing');
+end
+
+// # Pract no2: Piecewise linear transformations
+//a. Contrast Stretching
+clc;
+clear all;
+a=imread('C:\Users\Desktop\all class\DIP\All ocdes\image\lena.jpeg');
+a=rgb2gray(a);
+subplot(2,1,1);
+imshow(a);
+title('org img');
+T=60; //threshold value
+[r,c]=size(a);
+for i=1:r
+    for j=1:c
+        if (a(i,j)<=T)
+            x(i,j)=0;
+        else
+            x(i,j)=255;
+        end
+        x=uint8(x);
+subplot(2,1,2);
+imshow(x);
+title('threshholded img');
+    end
+end
+
+// # d-e add sub
+clc;
+clear all;
+A=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+B=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\circle.png');
+A=rgb2gray(A);
+B=rgb2gray(B);
+C=imadd(B, A);
+
+D=imsubtract(B, A);
+figure(1);
+subplot(2,2,1);
+imshow(A);
+subplot(2,2,2);
+imshow(B);
+subplot(2,2,3);
+imshow(C);
+subplot(2,2,4);
+imshow(D);
+
+// # dialation
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\rectb.png');
+a=rgb2gray(a);
+d=a;
+A1=a;
+[r,c]=size(d);
+subplot(2,1,1);
+imshow(a);
+title('org img');
+m=[1 1 1;1 1 1;1 1 1];
+// m=ones(5,5);
+for i=2:1:r-1
+for j=2:1:c-1
+new=[(m(1)*d(i-1,j-1)) (m(2)*d(i-1,j)) (m(3)*d(i-1,j+1)) (m(4)*d(i,j-1)) (m(5)*d(i,j)) (m(6)*d(i,j+1)) (m(7)*d(i+1,j-1)) (m(8)*d(i+1,j)) (m(9)*d(i+1,j+1))];
+A1(i,j)=max(new);
+end
+subplot(2,1,2);
+imshow(A1);title('Processed Image - dilation');
+end
+
+// # erosion
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\rectb.png');
+a=rgb2gray(a);
+subplot(2,1,1);
+imshow(a);
+title('org img');
+A1=a;
+d=a;
+[r,c]=size(d);
+m=[1 1 1;1 1 1;1 1 1];
+// m=ones(5,5);
+for i=2:1:r-1
+for j=2:1:c-1
+    new=[(m(1)*d(i-1,j-1)) (m(2)*d(i-1,j)) (m(3)*d(i-1,j+1)) (m(4)*d(i,j-1)) (m(5)*d(i,j)) (m(6)*d(i,j+1)) (m(7)*d(i+1,j-1)) (m(8)*d(i+1,j)) (m(9)*d(i+1,j+1))];
+A1(i,j)=min(new);
+end
+subplot(2,1,2);
+title('org img');imshow(A1);title('Processed Image - Erosion');
+end
+
+// # grey level with bg
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+
+a1=58; // This value is user defined
+b1=158; // This value is user defined
+[r,c]=size(a);
+figure(2);
+subplot(2,1,1);
+imshow(a);
+for i=1:r
+    for j=1:c
+        if (a(i,j)>a1 & a(i,j)<b1)
+            x(i,j)=255;
+        else
+            x(i,j)=a(i,j);
+        end
+    end
+end
+x=uint8(x);
+subplot(2,1,2);
+imshow(x);
+
+// # grey level without bg
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+
+a1=50; // This value is user defined
+b1=150; // This value is user defined
+[r,c]=size(a);
+figure(1)
+subplot(2,1,1);
+imshow(a);
+for i=1:r
+    for j=1:c
+        if (a(i,j)>a1 & a(i,j)<b1)
+            x(i,j)=255;
+        else
+            x(i,j)=0;
+        end
+    end
+end
+x=uint8(x);
+subplot(2,1,2);
+imshow(x);
+
+// # grey to color
+clc;
+close;
+
+a = imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lenag.jpeg');
+
+//Displaying Original RGB image
+figure(1);
+imshow(a);
+title("Original Image")
+
+//Displaying Gray level image
+b = rgb2gray(a);
+figure(2);
+imshow(b);
+title("Gray Level Image")
+
+//Displaying False coloring(Pseudo) image
+figure(3)
+imshow(b,jetcolormap(256));
+title("Pseudo Color Image");
+
+// # grey to false color
+clc;
+close;
+a = imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lenag.jpeg');
+
+//Displaying Original RGB image
+figure(1);
+imshow(a);
+title("Original Image")
+
+//Displaying Gray level image
+b = rgb2gray(a);
+figure(2);
+imshow(b);
+title("Gray Level Image")
+
+//Displaying False coloring(Pseudo) image
+figure(3)
+imshow(b,jetcolormap(256));
+title("Pseudo Color Image");
+
+// # highpass
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+b=double(a);
+c=imnoise(a,'salt & pepper',0.2);
+d=double(c);
+
+subplot(2,2,1);
+imshow(a);
+title('original');
+subplot(2,2,2);
+imshow(c);
+title('noise img');
+m=[-1 -1 -1;-1 8 -1;-1 -1 -1];
+[r1,c1]=size(a);
+
+for i=2:1:r1-1
+    for j=2:1:c1-1
+   new(i,j)=(m(1)*d(i-1,j-1))+(m(2)*d(i-1,j))+(m(3)*d(i-1,j+1))    +(m(4)*d(i,j-1))+(m(5)*d(i,j))+(m(6)*d(i,j+1))
+    +(m(7)*d(i+1,j-1))+(m(8)*d(i+1,j))+(m(9)*d(i+1,j+1));
+    end
+end
+subplot(2,2,3);
+imshow(uint8(new));
+title('LP-filtered img');
+
+// # historgram
+//Q 2_B 1. Program to apply histogram equalization
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lena.jpeg');
+a=rgb2gray(a);
+h=zeros(1,258);
+[r,c]=size(a);
+for i=1:r
+    for j=1:c
+        if (a(i,j)==0)
+            h(0)=h(0)+1;
+        end
+        k=a(i,j);
+        h(k)=h(k)+1;
+    end
+end
+figure(1);
+subplot(1,2,1);
+imshow(uint8(a));
+title('Original Image')
+subplot(1,2,2);
+bar(h);
+title('Image histogram');
+
+// # histogram color image
+//Q 2_B 1. Program to plot the histogram of an image and categorise
+clc;
+clear all;
+image=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lena.png');
+
+
+R = image(:,:,1);
+G = image(:,:,2);
+B = image(:,:,3);
+nBins = 256;
+//Get histValues for each channel
+[yR,x] = imhist(R,nBins);
+[yG,x] = imhist(G,nBins);
+[yB,x] = imhist(B,nBins);
+//Plot them together in one plot
+plot(x,yR,x,yG,x,yB,"Linewidth",2);
+xlabel("RGB Intensity");
+ylabel("No. of Pixels");
+set(gca(),"grid",[1,1]);
+
+// # image negative
+//for gray image
+clc;
+clear all;
+A = imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+A=rgb2gray(A);
+subplot(2,1,1);
+imshow(A);
+title('Original Image ');
+
+[row col]=size(A);
+for x=1:row
+    for y=1:col
+       A(x,y)=255-A(x,y);
+    end
+end
+subplot(2,1,2);
+imshow(A);
+title('Image after negation');
+
+// # imagentation color
+clc;
+clear all;
+A = imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\negimg.jpg');
+
+subplot(2,1,1);
+imshow(A);
+title('Orignial Image');
+R = A(:,:,1); 
+G = A(:,:,2); 
+B = A(:,:,3);
+
+[row col]=size(A);
+for x=1:row
+    for y=1:col
+       R(x,y)=255-R(x,y);
+       G(x,y)=255-G(x,y);
+       B(x,y)=255-B(x,y);
+    end
+end
+
+A(:,:,1)=R; 
+A(:,:,2)=G; 
+A(:,:,3)=B;
+
+
+subplot(2,1,2);
+imshow(A);
+title('Image after negation');
+
+// # intensity level
+clc;
+clear all;
+figure(1)
+
+subplot(3,3,1);
+i=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lena.jpeg');
+imshow(i);
+title('original image');
+subplot(3,3,2);
+j1=imresize(i,0.8);
+imshow(j1);
+title('resized image 0.8');
+
+subplot(3,3,3);
+j2=imresize(i,0.7);
+imshow(j2);
+title('resized image 0.7');
+
+subplot(3,3,4);
+j3=imresize(i,0.6);
+imshow(j3);
+title('resized image 0.6');
+
+subplot(3,3,5);
+j4=imresize(i,0.1);
+imshow(j4);
+title('resized image 0.1');
+
+// # log trans
+//Pract no 2_A_iii :Program to perform Log transformation
+clc;
+clear all;
+a=imread('C:\Desktop\all class\DIP\All ocdes\image\camera.png');
+a=rgb2gray(a);
+subplot(2,1,1);
+imshow(a);
+c=1;
+[r1,c1]=size(a);
+for i=1:r1
+    for j=1:c1
+        b=double(a(i,j));
+        s(i,j)=c*log10(1+b);
+    end
+end
+new1=uint8(s*100);
+//imshow(new1);
+subplot(2,2,2);
+imshow(new1);
+
+// # lowpass
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+b=double(a);
+c=imnoise(a,'salt & pepper',0.2);
+d=double(c);
+
+subplot(2,2,1);
+imshow(a);
+title('original');
+subplot(2,2,2);
+imshow(c);
+title('noise img');
+m=(1/9)*(ones(3,3));
+[r1,c1]=size(a);
+
+for i=2:1:r1-1
+    for j=2:1:c1-1
+   new(i,j)=(m(1)*d(i-1,j-1))+(m(2)*d(i-1,j))+(m(3)*d(i-1,j+1))    +(m(4)*d(i,j-1))+(m(5)*d(i,j))+(m(6)*d(i,j+1))
+    +(m(7)*d(i+1,j-1))+(m(8)*d(i+1,j))+(m(9)*d(i+1,j+1));
+    end
+end
+subplot(2,2,3);
+imshow(uint8(new));
+title('LP-filtered img');
+
+// # one color to other
+clc;
+close;
+x=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\lena.png');
+
+//Displayimg RGB image
+figure(1);
+imshow(x);
+title('Original RGB Image')
+
+//Displaying HSV image
+y = rgb2hsv(x);
+figure(2);
+imshow(y);
+title('HSV version of RGB original Image')
+
+// # opening ex
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\rice.jpeg');
+a=rgb2gray(a);
+d=a;
+A2=d;
+A1=d;
+subplot(2,2,1);
+imshow(a);
+title('org img');
+[r,c]=size(d);
+m=[1 1 1;1 1 1;1 1 1];
+for i=2:1:r-1
+for j=2:1:c-1
+new=[(m(1)*d(i-1,j-1)) (m(2)*d(i-1,j)) (m(3)*d(i-1,j+1))
+(m(4)*d(i,j-1)) (m(5)*d(i,j)) (m(6)*d(i,j+1))
+(m(7)*d(i+1,j-1)) (m(8)*d(i+1,j)) (m(9)*d(i+1,j+1))];
+A2(i,j)=min(new);
+end
+subplot(2,2,2);
+imshow(A2);
+title('org img');
+end
+
+d = A2;
+A1=A2;
+[r,c]=size(d);
+for i=2:1:r-1
+for j=2:1:c-1
+new=[(m(1)*d(i-1,j-1)) (m(2)*d(i-1,j)) (m(3)*d(i-1,j+1))
+(m(4)*d(i,j-1)) (m(5)*d(i,j)) (m(6)*d(i,j+1))
+(m(7)*d(i+1,j-1)) (m(8)*d(i+1,j)) (m(9)*d(i+1,j+1))];
+A1(i,j)=max(new);
+end
+subplot(2,2,3);
+imshow(A1);title('Processed Image - Opening');
+end
+
+// # power law
+clc;
+clear all;
+a=imread('C:\Users\Mithilesh\Desktop\all class\DIP\All ocdes\image\camera.png');
+[r,c]=size(a);
+subplot(2,1,1);
+imshow(a);
+G=0.8;
+for i=1:r
+    for j=1:c
+        b=double(a(i,j));
+        x(i,j)=b^G;
+        end
+end
+new1=uint8(x);
+subplot(2,1,2);
+imshow(new1);
